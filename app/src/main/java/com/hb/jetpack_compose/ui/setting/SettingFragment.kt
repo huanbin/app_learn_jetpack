@@ -1,42 +1,41 @@
 package com.hb.jetpack_compose.ui.setting
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import com.hb.jetpack_compose.databinding.FragmentSlideshowBinding
 
-class SettingFragment : Fragment() {
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Face
+import androidx.compose.runtime.*
+import com.hb.jetpack_compose.ui.BaseFragment
 
-    private var _binding: FragmentSlideshowBinding? = null
+class SettingFragment : BaseFragment() {
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    @OptIn(ExperimentalMaterialApi::class)
+    @Composable
+    override fun createView() {
+        LazyColumn(content = {
+            items(10,itemContent = {
+                ListItem(
+                    icon = {
+                        Icon(Icons.Filled.Face, contentDescription = "")
+                    },
+                    secondaryText = {
+                        Text(text = "secondaryText")
+                    },
+                    overlineText = {
+                        Text(text = "overlineText")
+                    },
+                    trailing = {
+                        Switch(false, onCheckedChange = {
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val settingViewModel =
-            ViewModelProvider(this).get(SettingViewModel::class.java)
-
-        _binding = FragmentSlideshowBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        val textView: TextView = binding.textSlideshow
-        settingViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
-        return root
+                        })
+                    },
+                    text = {
+                        Text(text = "main text,main text,main text,main text。")
+                    }
+                )
+            })
+        })
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 }

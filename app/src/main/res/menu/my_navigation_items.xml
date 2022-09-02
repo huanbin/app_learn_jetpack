@@ -8,5 +8,6 @@
         android:title="@string/menu_fav" />
     <item
         android:id="@+id/settings_navigation"
+        android:icon="@drawable/ic_menu_camera"
         android:title="@string/menu_settings" />
 </menu>

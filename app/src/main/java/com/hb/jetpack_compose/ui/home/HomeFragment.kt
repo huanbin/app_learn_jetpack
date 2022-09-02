@@ -1,42 +1,22 @@
 package com.hb.jetpack_compose.ui.home
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import com.hb.jetpack_compose.databinding.FragmentHomeBinding
 
-class HomeFragment : Fragment() {
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.fragment.app.viewModels
+import com.hb.jetpack_compose.ui.BaseFragment
 
-    private var _binding: FragmentHomeBinding? = null
+class HomeFragment : BaseFragment() {
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
-
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        val textView: TextView = binding.textHome
-        homeViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
-        return root
+    @Composable
+    override fun createView() {
+        val viewModel by viewModels<HomeViewModel>()
+        HomeScreen()
     }
+}
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+
+@Composable
+fun HomeScreen() {
+    Text("HELLO WORLD!")
 }

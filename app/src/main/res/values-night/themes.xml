@@ -10,7 +10,25 @@
         <item name="colorSecondaryVariant">@color/teal_200</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <!--自定义button-->
+        <item name="materialButtonStyle">@style/MY_BUTTON</item>
+        <item name="android:textViewStyle">@style/MY_TEXT</item>
     </style>
+
+    <style name="Theme.Jetpack_compose.Toolbar" parent="Widget.MaterialComponents.Toolbar.Surface" />
+
+    <style name="MY_TEXT" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/holo_red_dark</item>
+    </style>
+
+    <style name="MY_BUTTON" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="strokeWidth">2dp</item>
+        <item name="strokeColor">@android:color/holo_red_dark</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
 </resources>
