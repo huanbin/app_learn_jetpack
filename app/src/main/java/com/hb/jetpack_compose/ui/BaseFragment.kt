@@ -11,7 +11,7 @@ import androidx.fragment.app.viewModels
 import com.google.accompanist.appcompattheme.AppCompatTheme
 
 
-open abstract class BaseFragment : Fragment() {
+abstract class BaseFragment : Fragment() {
 
     @Composable
     abstract fun createView()
