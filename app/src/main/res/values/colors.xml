@@ -1,10 +1,26 @@
-<?xml version="1.0" encoding="utf-8"?>
+<!--?xml version="1.0" encoding="UTF-8"?-->
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!--应用栏（也叫操作栏）可以是ActionBar或者Toolbar-->
+    <!--   color for the app bar and other primary UI elements -->
+    <!--主颜色，主要用于应用栏，比如Toolbar和其它主要UI颜色-->
+    <color name="primaryColor">#00e676</color>
+    <!--   a darker variant of the primary color, used for
+             the status bar (on Android 5.0+) and contextual app bars -->
+    <!--主色的深色，主要用于状态栏和上下文应用栏-->
+    <color name="primaryLightColor">#66ffa6</color>
+    <color name="primaryDarkColor">#00b248</color>
+    <!--textColorPrimary -->
+    <color name="primaryTextColor">#000000</color>
+    <!--   a secondary color for controls like checkboxes and text fields -->
+    <!--辅助颜色，主要用于控制类似复选框和文本输入框的辅助颜色-->
+    <color name="secondaryColor">#00c853</color>
+    <color name="secondaryLightColor">#5efc82</color>
+    <color name="secondaryDarkColor">#009624</color>
+    <color name="secondaryTextColor">#ffffff</color>
+    <!--colorAccent是为了在不能继承MaterialTheme时而定义的一个属性，它引用的就是colorSecondary-->
+    <!--<item name="colorAccent">?attr/colorSecondary</item>-->
+    <!--不需要-->
+    <!--    <color name="colorAccent">#FF4081</color>-->
+    <color name="whiteBackground">@android:color/white</color>
+    <color name="blackBackground">@android:color/black</color>
 </resources>

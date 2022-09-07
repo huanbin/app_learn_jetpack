@@ -71,4 +71,7 @@ dependencies {
     implementation "com.google.accompanist:accompanist-appcompat-theme:$accompanist"
     //coil
     implementation("io.coil-kt:coil-compose:2.2.0")
+
+    //引用工具lint
+    lintChecks(project(':lintCheckLib'))
 }

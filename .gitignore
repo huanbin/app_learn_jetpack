@@ -18,3 +18,4 @@ local.properties
 /build/
 /gradle/
 /app/build/
+/lintCheckLib/build/
