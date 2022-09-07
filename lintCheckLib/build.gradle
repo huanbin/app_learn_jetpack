@@ -1,0 +1,25 @@
+plugins {
+    id 'java-library'
+    id 'org.jetbrains.kotlin.jvm'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+
+dependencies {
+    def kotlin_version = "1.7.10"
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    compileOnly 'com.android.tools.lint:lint-api:26.4.1'
+    compileOnly 'com.android.tools.lint:lint-checks:26.4.1'
+}
+
+jar {
+    manifest {
+        attributes 'Lint-Registry':'com.hb.lintchecklib.DarkThemeLintRegistry'
+    }
+}
