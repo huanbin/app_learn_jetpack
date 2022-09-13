@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.circularreveal.coordinatorlayout.CircularRevealCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <!--
+    为什么设置了elevation，不显示阴影
+       在给view设置背景并引用:?attr/surfaceColor属性设置background背景时（或者使用的style样式中包含这个）才会显示阴影
+    -->
     <com.google.android.material.appbar.AppBarLayout
+        style="@style/Widget.MaterialComponents.AppBarLayout.PrimarySurface"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
+            style="@style/Widget.MaterialComponents.Toolbar.PrimarySurface"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize" />
 
@@ -21,8 +27,9 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavView"
+        style="@style/Widget.MaterialComponents.BottomNavigationView.PrimarySurface"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_gravity="bottom"
         app:menu="@menu/my_navigation_items" />
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</com.google.android.material.circularreveal.coordinatorlayout.CircularRevealCoordinatorLayout>

@@ -3,7 +3,20 @@
     <!--自定义组件的样式，可以通过扩展继承Android样式或者支持库样式，AppCompat支持库中为新老版本做了兼容和优化，因此推荐扩展支持库样式进行自定义我们的APP内组件样式 -->
     <!--material design中颜色分为3类，主色（APP屏幕上最常见的颜色）、辅助色（选中状态）、强调色（突出强调的UI）-->
     <style name="BaseAppTheme" parent="Theme.MaterialComponents.DayNight">
-
+        <!--colorPrimary主色和colorSecondary辅助色（突出、强调色），不会应用到UI的策略部分，一般是用来代表您的品牌-->
+        <!--主色，用于组件和原色，比如：应用栏、按钮、导航栏-->
+        <item name="colorPrimary">@color/primaryDarkColor</item>
+        <!--辅助色，用于强调突出组件，比如FAB按钮、当前用户选中的控件（checkbox的选中状态颜色）-->
+        <item name="colorSecondary">@color/primaryLightColor</item>
+        <!--颜色变体用于补充和提供访问选项？？？没明白,但是Material上标注statusbar使用该颜色-->
+        <item name="colorPrimaryVariant">@color/primaryDarkColor</item>
+        <!--用于状态栏和导航栏-->
+        <item name="colorPrimaryDark">?attr/colorPrimaryVariant</item>
+        <!---->
+        <item name="colorOnPrimary">@color/whiteColor</item>
+        <item name="colorOnSecondary">#000000</item>
+        <!--自定义整个App内button的样式-->
+        <item name="materialButtonStyle">@style/MY_BUTTON</item>
     </style>
 
     <style name="Theme.Jetpack_compose" parent="BaseAppTheme"></style>
@@ -11,5 +24,20 @@
     <style name="Theme.Jetpack_compose.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <!--应用级别的Button样式，定义了布局文件中创建的Button的默认样式-->
+    <style name="MY_BUTTON" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="shapeAppearanceOverlay">@style/MY_Button_ShapeOverlay_Round</item>
+    </style>
+    <style name="MY_Button_ShapeOverlay_Round" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+
+    <!--通过组件的shapeAppearanceOverlay属性引用该style实现自定义组件实例的样式-->
+    <style name="MY_Button_ShapeOverlay_Cut" parent="">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSize">0dp</item>
     </style>
 </resources>

@@ -1,6 +1,13 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Jetpack_compose" parent="Theme.MaterialComponents.DayNight">
-
+    <style name="BaseAppTheme" parent="Theme.MaterialComponents.DayNight">
+        <!--阴影在深色模式下效果很差-->
+        <!--阴影叠加功能（elevationOverlayEnabled）在深色模式下默认为启用，浅色模式下是关闭的-->
+        <!--如果Material组件样式中使用了colorSurface属性，那么就可以elevation-->
+        <!--<item name="elevationOverlayEnabled">true</item>-->
+        <!--一般不改它-->
+        <!--<item name="elevationOverlayColor">@android:color/holo_red_dark</item>-->
     </style>
+
+    <style name="Theme.Jetpack_compose" parent="BaseAppTheme"></style>
 </resources>
