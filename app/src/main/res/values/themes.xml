@@ -17,6 +17,9 @@
         <item name="colorOnSecondary">#000000</item>
         <!--自定义整个App内button的样式-->
         <item name="materialButtonStyle">@style/MY_BUTTON</item>
+
+        <!-- Set the navigation bar to 50% translucent white -->
+        <item name="android:navigationBarColor">#80FFFFFF</item>
     </style>
 
     <style name="Theme.Jetpack_compose" parent="BaseAppTheme"></style>
