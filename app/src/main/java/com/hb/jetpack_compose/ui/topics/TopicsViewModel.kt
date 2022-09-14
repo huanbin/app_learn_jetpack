@@ -1,10 +1,10 @@
-package com.hb.jetpack_compose.ui.gallery
+package com.hb.jetpack_compose.ui.topics
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class GalleryViewModel : ViewModel() {
+class TopicsViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is gallery Fragment"

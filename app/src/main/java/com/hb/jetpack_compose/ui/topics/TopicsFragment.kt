@@ -1,4 +1,4 @@
-package com.hb.jetpack_compose.ui.gallery
+package com.hb.jetpack_compose.ui.topics
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.hb.jetpack_compose.databinding.FragmentGalleryBinding
 
-class GalleryFragment : Fragment() {
+class TopicsFragment : Fragment() {
 
     private var _binding: FragmentGalleryBinding? = null
 
@@ -22,14 +22,14 @@ class GalleryFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val galleryViewModel =
-            ViewModelProvider(this).get(GalleryViewModel::class.java)
+        val topicsViewModel =
+            ViewModelProvider(this).get(TopicsViewModel::class.java)
 
         _binding = FragmentGalleryBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         val textView: TextView = binding.textGallery
-        galleryViewModel.text.observe(viewLifecycleOwner) {
+        topicsViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
         return root
