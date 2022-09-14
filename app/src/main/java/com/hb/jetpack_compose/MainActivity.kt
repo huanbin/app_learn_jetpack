@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         //这个到底是什么？
         WindowCompat.setDecorFitsSystemWindows(window, false)
         ViewCompat.setOnApplyWindowInsetsListener(binding.bottomNavView) { view, insets ->
-            view.updatePadding(bottom = insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom)
+            view.updatePadding(bottom = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom)
             return@setOnApplyWindowInsetsListener insets
         }
 
