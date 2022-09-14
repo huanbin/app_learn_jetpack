@@ -40,13 +40,16 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         binding.bottomNavView.setupWithNavController(navController)
 
+        fullscreen()
+    }
 
+    private fun fullscreen() {
         //全屏布局，让内容出现在statusbar和navgationbar后面，但是该flag在Api 30就作废了
-//        binding.root.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-//                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-//            window.setDecorFitsSystemWindows(false)
-//        }
+        //        binding.root.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+        //                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+        //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        //            window.setDecorFitsSystemWindows(false)
+        //        }
         //兼容方案
         //这个到底是什么？
         WindowCompat.setDecorFitsSystemWindows(window, false)
