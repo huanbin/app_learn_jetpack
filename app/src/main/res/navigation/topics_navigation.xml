@@ -2,11 +2,11 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/nav_gallery"
-    android:id="@+id/favorites_navigation">
+    app:startDestination="@id/nav_topics"
+    android:id="@+id/topics_navigation">
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.hb.jetpack_compose.ui.gallery.GalleryFragment"
-        android:label="@string/menu_fav"
+        android:id="@+id/nav_topics"
+        android:name="com.hb.jetpack_compose.ui.topics.TopicsFragment"
+        android:label="@string/menu_topics"
         tools:layout="@layout/fragment_gallery" />
 </navigation>

@@ -2,12 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/home_navigation"
+        android:icon="@drawable/ic_outline_home_24"
         android:title="@string/menu_home" />
     <item
-        android:id="@+id/favorites_navigation"
-        android:title="@string/menu_fav" />
+        android:id="@+id/topics_navigation"
+        android:icon="@drawable/ic_outline_topic_24"
+        android:title="@string/menu_topics" />
     <item
         android:id="@+id/settings_navigation"
-        android:icon="@drawable/ic_menu_camera"
+        android:icon="@drawable/ic_outline_settings_24"
         android:title="@string/menu_settings" />
 </menu>

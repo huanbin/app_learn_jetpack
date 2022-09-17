@@ -8,6 +8,7 @@
              the status bar (on Android 5.0+) and contextual app bars -->
     <!--主色的深色，主要用于状态栏和上下文应用栏-->
     <color name="primaryLightColor">#66ffa6</color>
+    <color name="primaryLightColor_8">#1466ffa6</color>
     <color name="primaryDarkColor">#00b248</color>
     <!--textColorPrimary -->
     <color name="primaryTextColor">#000000</color>
@@ -21,6 +22,6 @@
     <!--<item name="colorAccent">?attr/colorSecondary</item>-->
     <!--不需要-->
     <!--    <color name="colorAccent">#FF4081</color>-->
-    <color name="whiteBackground">@android:color/white</color>
-    <color name="blackBackground">@android:color/black</color>
+    <color name="whiteColor">@android:color/white</color>
+    <color name="blackColor">@android:color/black</color>
 </resources>
