@@ -11,6 +11,9 @@ class HomeFragment : BaseFragment() {
     @Composable
     override fun createView() {
         val viewModel by viewModels<HomeViewModel>()
+        viewModel.text.observe(this){
+            println(it)
+        }
         HomeScreen()
     }
 }
