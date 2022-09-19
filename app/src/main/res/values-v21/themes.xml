@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <style name="Theme.Jetpack_compose" parent="BaseAppTheme">
-        <!--扩展支持API21以及以上版本的主题样式-->
-    </style>
-</resources>
