@@ -11,15 +11,21 @@
         <!--颜色变体用于补充和提供访问选项？？？没明白,但是Material上标注statusbar使用该颜色-->
         <item name="colorPrimaryVariant">@color/primaryDarkColor</item>
         <!--用于状态栏和导航栏-->
-       <!-- <item name="colorPrimaryDark">?attr/colorPrimaryVariant</item>-->
+        <!-- <item name="colorPrimaryDark">?attr/colorPrimaryVariant</item>-->
         <!---->
         <item name="colorOnPrimary">@color/whiteColor</item>
         <item name="colorOnSecondary">#000000</item>
         <!--自定义整个App内button的样式-->
         <item name="materialButtonStyle">@style/MY_BUTTON</item>
 
+        <!--必须设置为true，否则navigationBarColor和statusBarColor无效-->
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <!--，必须设置为false，否则会覆盖statusBarColor，添加一个dark scrim 在statusBar上-->
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">false</item>
         <!-- Set the navigation bar to 50% translucent white -->
         <item name="android:navigationBarColor">#80FFFFFF</item>
+        <!--<item name="android:navigationBarColor">@android:color/transparent</item>-->
         <!--透明的状态栏-->
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
@@ -35,6 +41,7 @@
     <style name="MY_BUTTON" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="shapeAppearanceOverlay">@style/MY_Button_ShapeOverlay_Round</item>
     </style>
+
     <style name="MY_Button_ShapeOverlay_Round" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">8dp</item>
