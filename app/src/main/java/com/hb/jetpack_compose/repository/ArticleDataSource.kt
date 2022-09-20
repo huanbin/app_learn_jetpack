@@ -9,6 +9,7 @@ class ArticleDataSource() : PagingSource<Int, ArticleItemData>() {
 
     companion object {
         val DataBatchSize = 10
+        val PageSize = 10
     }
 
     override fun getRefreshKey(state: PagingState<Int, ArticleItemData>): Int? {
@@ -27,12 +28,15 @@ class ArticleDataSource() : PagingSource<Int, ArticleItemData>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ArticleItemData> {
         val nextPage = params.key ?: 0
-        val homeArticleResult = RetrofitApi.getInstance().getHomeArticleList(nextPage)
+        val homeArticleResult = RetrofitApi.getInstance().getHomeArticleList(nextPage, PageSize)
+        //println("current page=${homeArticleResult.data.curPage}")
+        //delay(3000)
         try {
             return LoadResult.Page(
                 homeArticleResult.data.articleItemData,
                 prevKey = if (nextPage == 0) null else nextPage.minus(1),
-                nextKey = homeArticleResult.data.curPage.plus(1)
+                //前端页码是从0开始的，后端页码从1开始的
+                nextKey = homeArticleResult.data.curPage
             )
         } catch (e: Exception) {
             return LoadResult.Error(e)

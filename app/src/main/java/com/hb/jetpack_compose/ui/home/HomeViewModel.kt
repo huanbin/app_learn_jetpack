@@ -23,7 +23,8 @@ class HomeViewModel : ViewModel() {
         PagingConfig(
             pageSize = ArticleDataSource.DataBatchSize,
             enablePlaceholders = true,
-            maxSize = 200
+            maxSize = 200,
+            initialLoadSize = 10
         )
     ) { ArticleDataSource() }.flow.cachedIn(viewModelScope)
 
