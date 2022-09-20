@@ -1,16 +1,14 @@
 package com.hb.jetpack_compose
 
-import android.os.Build
 import android.os.Bundle
 import android.view.Menu
-import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.*
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.*
 import com.hb.jetpack_compose.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

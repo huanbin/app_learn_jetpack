@@ -5,8 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hb.jetpack_compose.network.RetrofitApi
-import kotlinx.coroutines.launch
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.cachedIn
+import com.hb.jetpack_compose.repository.ArticleDataSource
 
 class HomeViewModel : ViewModel() {
 
@@ -16,12 +18,13 @@ class HomeViewModel : ViewModel() {
     val text: LiveData<String> = _text
 
     val lazyListState = LazyListState()
-    
-    init {
-        println("HomeViewModel")
-        viewModelScope.launch {
-            val articleListResult = RetrofitApi.getInstance().getHomeArticleList(0)
-            println(articleListResult.data)
-        }
-    }
+
+    val pager = Pager(
+        PagingConfig(
+            pageSize = ArticleDataSource.DataBatchSize,
+            enablePlaceholders = true,
+            maxSize = 200
+        )
+    ) { ArticleDataSource() }.flow.cachedIn(viewModelScope)
+
 }
