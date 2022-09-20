@@ -1,4 +1,4 @@
-package com.hb.jetpack_compose.ui.model
+package com.hb.jetpack_compose.model
 
 import kotlinx.serialization.Serializable
 

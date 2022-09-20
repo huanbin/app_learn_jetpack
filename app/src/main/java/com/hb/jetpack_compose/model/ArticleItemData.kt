@@ -1,9 +1,9 @@
-package com.hb.jetpack_compose.ui.model
+package com.hb.jetpack_compose.model
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Data(
+data class ArticleItemData(
     val adminAdd: Boolean,
     val apkLink: String,
     val audit: Int,

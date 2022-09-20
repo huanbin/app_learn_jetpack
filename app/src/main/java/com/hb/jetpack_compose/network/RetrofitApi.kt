@@ -9,11 +9,16 @@ import retrofit2.Retrofit
 object RetrofitApi {
 
     const val BaseUrl = "https://www.wanandroid.com/"
-    private val ContentType = "application/json".toMediaType()
     private val retrofit: Retrofit by lazy {
+        val contentType = "application/json".toMediaType()
+        val json = Json {
+            prettyPrint = true
+            ignoreUnknownKeys = true
+        }
         Retrofit.Builder().apply {
             baseUrl(BaseUrl)
-                .addConverterFactory(Json.asConverterFactory(contentType = ContentType))
+//                .addConverterFactory(Json.asConverterFactory(contentType = ContentType))
+                .addConverterFactory(json.asConverterFactory(contentType = contentType))
         }.build()
     }
 

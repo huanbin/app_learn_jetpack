@@ -10,10 +10,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
+import androidx.core.view.*
 import com.hb.jetpack_compose.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -38,6 +35,10 @@ class MainActivity : AppCompatActivity() {
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            binding.bottomNavView.isVisible =
+                !appBarConfiguration.topLevelDestinations.contains(destination.id)
+        }
         binding.bottomNavView.setupWithNavController(navController)
 
         fullscreen()

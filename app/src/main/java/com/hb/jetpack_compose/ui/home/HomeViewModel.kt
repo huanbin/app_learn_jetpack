@@ -1,5 +1,6 @@
 package com.hb.jetpack_compose.ui.home
 
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,10 +15,12 @@ class HomeViewModel : ViewModel() {
     }
     val text: LiveData<String> = _text
 
+    val lazyListState = LazyListState()
+    
     init {
         println("HomeViewModel")
         viewModelScope.launch {
-           val articleListResult=RetrofitApi.getInstance().getHomeArticleList(0)
+            val articleListResult = RetrofitApi.getInstance().getHomeArticleList(0)
             println(articleListResult.data)
         }
     }
