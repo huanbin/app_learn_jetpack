@@ -34,10 +34,10 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
-            binding.bottomNavView.isVisible =
+            binding.mainContent.bottomNavView.isVisible =
                 !appBarConfiguration.topLevelDestinations.contains(destination.id)
         }
-        binding.bottomNavView.setupWithNavController(navController)
+        binding.mainContent.bottomNavView.setupWithNavController(navController)
 
         fullscreen()
     }
@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         //兼容方案
         //这个到底是什么？
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.bottomNavView) { view, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.mainContent.bottomNavView) { view, insets ->
             view.updatePadding(bottom = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom)
             return@setOnApplyWindowInsetsListener insets
         }

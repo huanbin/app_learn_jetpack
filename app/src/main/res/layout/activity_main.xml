@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.circularreveal.coordinatorlayout.CircularRevealCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -24,15 +23,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_main" />
-    <!--layout_height设置具体高度值，当前屏显示时就会出现遮挡-->
-    <!--BottomNavigationView遮挡内容？-->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavView"
-        style="@style/Widget.MaterialComponents.BottomNavigationView.PrimarySurface"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
-        android:layout_gravity="bottom"
-        app:menu="@menu/my_navigation_items" />
+    <include
+        android:id="@+id/mainContent"
+        layout="@layout/content_main" />
 </com.google.android.material.circularreveal.coordinatorlayout.CircularRevealCoordinatorLayout>
