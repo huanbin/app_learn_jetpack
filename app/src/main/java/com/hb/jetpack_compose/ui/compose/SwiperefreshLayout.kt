@@ -5,17 +5,16 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.LinearProgressIndicator
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
@@ -29,14 +28,13 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.hb.jetpack_compose.R
-import com.hb.jetpack_compose.model.ArticleItemData
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SwiperefreshLayout(
+fun <T : Any> SwiperefreshLayout(
     lazyListState: LazyListState,
-    lazyPagingItems: LazyPagingItems<ArticleItemData>,
+    lazyPagingItems: LazyPagingItems<T>,
+    itemLayout: @Composable (index: Int, value: T?) -> Unit
 ) {
 
     val rememberSwipeRefreshState =
@@ -66,48 +64,19 @@ fun SwiperefreshLayout(
             if (lazyPagingItems.loadState.refresh is LoadState.Error) {
                 val error = lazyPagingItems.loadState.refresh as LoadState.Error
                 item {
-                    Text(
-                        text = "refresh occur error ${error.error.cause}",
+                    Text(text = "refresh occur error ${error.error.cause}",
                         modifier = Modifier
                             .clickable {
                                 lazyPagingItems.retry()
                             }
                             .fillParentMaxSize()
-                            .wrapContentSize()
-                    )
+                            .wrapContentSize())
                 }
             }
 
 
             itemsIndexed(lazyPagingItems) { index, value ->
-                ListItem(modifier = Modifier.clickable { },
-                    icon = {
-                        IconButton(onClick = { /*TODO*/ }) {
-                            Icon(
-                                Icons.Outlined.FavoriteBorder,
-                                tint = colorResource(id = R.color.primaryColor),
-                                contentDescription = "收藏",
-                                modifier = Modifier
-                            )
-                        }
-                    },
-                    secondaryText = null,
-                    singleLineSecondaryText = false,
-                    overlineText = null,
-                    trailing = {
-                        IconButton(onClick = { /*TODO*/ }) {
-                            Icon(
-                                Icons.Outlined.MoreVert,
-                                tint = colorResource(id = R.color.primaryColor),
-                                contentDescription = "更多",
-                                modifier = Modifier.rotate(90f)
-                            )
-                        }
-                    },
-                    text = {
-                        Text(text = "${value?.title}")
-                    })
-                Divider(color = Color.Black, thickness = 0.5.dp)
+                itemLayout(index, value)
             }
 
             if (lazyPagingItems.loadState.append == LoadState.Loading) {

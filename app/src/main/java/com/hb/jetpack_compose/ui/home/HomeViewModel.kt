@@ -21,10 +21,14 @@ class HomeViewModel : ViewModel() {
 
     val pager = Pager(
         PagingConfig(
-            pageSize = ArticleDataSource.PageSize, enablePlaceholders = true,
+            pageSize = ArticleDataSource.PageSize,
+            enablePlaceholders = true,
 //            prefetchDistance=10,
-            maxSize = 200, initialLoadSize = 10
+//            maxSize = 200,
+            initialLoadSize = 10
         )
-    ) { ArticleDataSource() }.flow.cachedIn(viewModelScope)
+    ) { ArticleDataSource() }.flow
+        //.flowOn(Dispatchers.IO)
+        .cachedIn(viewModelScope)
 
 }
