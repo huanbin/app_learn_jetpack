@@ -8,7 +8,6 @@ import com.hb.jetpack_compose.network.RetrofitApi
 class ArticleDataSource() : PagingSource<Int, ArticleItemData>() {
 
     companion object {
-        val DataBatchSize = 10
         val PageSize = 10
     }
 

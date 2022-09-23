@@ -63,6 +63,22 @@ fun SwiperefreshLayout(
                 }
             }
 
+            if (lazyPagingItems.loadState.refresh is LoadState.Error) {
+                val error = lazyPagingItems.loadState.refresh as LoadState.Error
+                item {
+                    Text(
+                        text = "refresh occur error ${error.error.cause}",
+                        modifier = Modifier
+                            .clickable {
+                                lazyPagingItems.retry()
+                            }
+                            .fillParentMaxSize()
+                            .wrapContentSize()
+                    )
+                }
+            }
+
+
             itemsIndexed(lazyPagingItems) { index, value ->
                 ListItem(modifier = Modifier.clickable { },
                     icon = {
@@ -108,8 +124,16 @@ fun SwiperefreshLayout(
             }
         }
 
-        val rememberCoroutineScope = rememberCoroutineScope()
+        if (lazyPagingItems.loadState.source.refresh is LoadState.NotLoading) {
+            val refresh = lazyPagingItems.loadState.source.refresh
+            if (refresh.endOfPaginationReached) {
+                println("到达最后，没有更多数据")
+            } else {
+                println("没有到达最后，可以加载下一页数据")
+            }
+        }
 
+        val rememberCoroutineScope = rememberCoroutineScope()
         LaunchedEffect(Unit) {
             rememberCoroutineScope.launch {
                 lazyListState.animateScrollToItem(
@@ -117,7 +141,6 @@ fun SwiperefreshLayout(
                 )
             }
         }
-
     }
 }
 
