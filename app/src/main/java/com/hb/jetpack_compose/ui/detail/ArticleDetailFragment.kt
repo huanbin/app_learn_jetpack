@@ -37,9 +37,8 @@ class ArticleDetailFragment : BaseFragment() {
     fun Screen() {
         Column(
             modifier = Modifier
-                .background(Color.Cyan)
-                .systemBarsPadding()
                 .background(Color.Red)
+                .systemBarsPadding()
         ) {
             TopAppBar {
                 Text(text = "文章详情")

@@ -18,16 +18,16 @@
         <!--自定义整个App内button的样式-->
         <item name="materialButtonStyle">@style/MY_BUTTON</item>
 
-        <!--必须设置为true，否则navigationBarColor和statusBarColor无效-->
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <!--，必须设置为false，否则会覆盖statusBarColor，添加一个dark scrim 在statusBar上-->
-        <item name="android:windowTranslucentStatus">false</item>
-        <item name="android:windowTranslucentNavigation">false</item>
-        <!-- Set the navigation bar to 50% translucent white -->
-        <item name="android:navigationBarColor">#80FFFFFF</item>
-        <!--<item name="android:navigationBarColor">@android:color/transparent</item>-->
-        <!--透明的状态栏-->
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <!-- &lt;!&ndash;必须设置为true，否则navigationBarColor和statusBarColor无效&ndash;&gt;
+         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+         &lt;!&ndash;，必须设置为false，否则会覆盖statusBarColor，添加一个dark scrim 在statusBar上&ndash;&gt;
+         <item name="android:windowTranslucentStatus">false</item>
+         <item name="android:windowTranslucentNavigation">false</item>
+         &lt;!&ndash; Set the navigation bar to 50% translucent white &ndash;&gt;
+         <item name="android:navigationBarColor">#80FFFFFF</item>
+         &lt;!&ndash;<item name="android:navigationBarColor">@android:color/transparent</item>&ndash;&gt;
+         &lt;!&ndash;透明的状态栏&ndash;&gt;
+         <item name="android:statusBarColor">@android:color/transparent</item>-->
     </style>
 
     <style name="Theme.Jetpack_compose" parent="BaseAppTheme"></style>

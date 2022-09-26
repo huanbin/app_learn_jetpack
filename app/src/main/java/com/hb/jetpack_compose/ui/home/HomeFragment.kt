@@ -35,6 +35,9 @@ class HomeFragment : BaseFragment() {
         val viewModel by activityViewModels<HomeViewModel>()
         return createComposeView { HomeScreen(viewModel) { findNavController().navigate(R.id.list_item) } }
     }
+
+    override fun isAppearanceLightStatusBars() = true
+    override fun isAppearanceLightNavigationBars() = true
 }
 
 
@@ -47,9 +50,7 @@ fun HomeScreen(viewModel: HomeViewModel, onNavigate: (Int) -> Unit) {
         contentPadding = PaddingValues(
             top = asPaddingValues.calculateTopPadding(),
             bottom = asPaddingValues.calculateBottomPadding() + BottomNavigationViewHeight.dp
-        ),
-        lazyListState,
-        pager
+        ), lazyListState, pager
     ) { index, value ->
         ArticleItemLayout(value = value) {
             onNavigate.invoke(R.id.list_item)
