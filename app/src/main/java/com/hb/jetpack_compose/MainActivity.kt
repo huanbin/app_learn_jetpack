@@ -2,13 +2,11 @@ package com.hb.jetpack_compose
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.*
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
+import androidx.navigation.ui.*
 import com.hb.jetpack_compose.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -30,12 +28,23 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.home_navigation, R.id.topics_navigation, R.id.settings_navigation
-            )
+            ), fallbackOnNavigateUpListener = ::onSupportNavigateUp
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
-            binding.mainContent.bottomNavView.isVisible =
-                !appBarConfiguration.topLevelDestinations.contains(destination.id)
+            /* println("Destinations home_navigation=${R.id.home_navigation}")
+             println("Destinations nav_home=${R.id.nav_home}")
+             println("topLevelDestinations id=${topLevelDestinations}")
+             println("destination id=${destination.id}")
+             println("currentDestination destination id=${controller.currentDestination?.id}")*/
+            //这里是分模块导航，如普通的情况不一样
+            //val topLevelDestinations = appBarConfiguration.topLevelDestinations
+            //这里直接列出顶级的导航
+            val topLevelDestinations =
+                setOf(R.id.nav_home, R.id.nav_topics, R.id.nav_setting)
+            val isTopNav = topLevelDestinations.contains(destination.id)
+            binding.mainContent.bottomNavView.isVisible = isTopNav
+            binding.appBar.isVisible = isTopNav
         }
         binding.mainContent.bottomNavView.setupWithNavController(navController)
 
@@ -67,6 +76,11 @@ class MainActivity : AppCompatActivity() {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
     }
 
     override fun onSupportNavigateUp(): Boolean {
