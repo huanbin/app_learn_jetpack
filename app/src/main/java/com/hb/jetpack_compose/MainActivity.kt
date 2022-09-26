@@ -6,8 +6,13 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.*
 import androidx.navigation.findNavController
-import androidx.navigation.ui.*
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.onNavDestinationSelected
+import androidx.navigation.ui.setupWithNavController
 import com.hb.jetpack_compose.databinding.ActivityMainBinding
+
+const val BottomNavigationViewHeight = 64
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,18 +24,7 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        setSupportActionBar(binding.toolbar)
-
         val navController = findNavController(R.id.nav_host_fragment_content_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.home_navigation, R.id.topics_navigation, R.id.settings_navigation
-            ), fallbackOnNavigateUpListener = ::onSupportNavigateUp
-        )
-        setupActionBarWithNavController(navController, appBarConfiguration)
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
             /* println("Destinations home_navigation=${R.id.home_navigation}")
              println("Destinations nav_home=${R.id.nav_home}")
@@ -43,11 +37,9 @@ class MainActivity : AppCompatActivity() {
             val topLevelDestinations =
                 setOf(R.id.nav_home, R.id.nav_topics, R.id.nav_setting)
             val isTopNav = topLevelDestinations.contains(destination.id)
-            binding.mainContent.bottomNavView.isVisible = isTopNav
-            binding.appBar.isVisible = isTopNav
+            binding.bottomNavView.isVisible = isTopNav
         }
-        binding.mainContent.bottomNavView.setupWithNavController(navController)
-
+        binding.bottomNavView.setupWithNavController(navController)
         fullscreen()
     }
 
@@ -61,15 +53,15 @@ class MainActivity : AppCompatActivity() {
         //兼容方案
         //这个到底是什么？
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.mainContent.bottomNavView) { view, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.bottomNavView) { view, insets ->
             view.updatePadding(bottom = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom)
             return@setOnApplyWindowInsetsListener insets
         }
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.appBar) { view, insets ->
-            view.updatePadding(top = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top)
-            return@setOnApplyWindowInsetsListener insets
-        }
+//        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
+//            view.updatePadding(top = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top)
+//            return@setOnApplyWindowInsetsListener insets
+//        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -32,6 +32,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun <T : Any> SwiperefreshLayout(
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     lazyListState: LazyListState,
     lazyPagingItems: LazyPagingItems<T>,
     itemLayout: @Composable (index: Int, value: T?) -> Unit
@@ -40,15 +41,18 @@ fun <T : Any> SwiperefreshLayout(
     val rememberSwipeRefreshState =
         rememberSwipeRefreshState(isRefreshing = lazyPagingItems.loadState.refresh is LoadState.Loading)
 
-    SwipeRefresh(state = rememberSwipeRefreshState, onRefresh = {
-        lazyPagingItems.refresh()
-    }, indicator = { state, trigger ->
-        GlowIndicator(
-            swipeRefreshState = state, refreshTriggerDistance = trigger
-        )
-    }) {
+    SwipeRefresh(
+        state = rememberSwipeRefreshState,
+        onRefresh = {
+            lazyPagingItems.refresh()
+        },
+        indicator = { state, trigger ->
+            GlowIndicator(
+                swipeRefreshState = state, refreshTriggerDistance = trigger
+            )
+        }) {
 
-        LazyColumn(state = lazyListState) {
+        LazyColumn(state = lazyListState, contentPadding = contentPadding) {
             if (lazyPagingItems.loadState.refresh == LoadState.Loading) {
                 item {
                     CircularProgressIndicator(

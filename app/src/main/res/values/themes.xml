@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. 兼容所有版本的主题样式-->
     <!--自定义组件的样式，可以通过扩展继承Android样式或者支持库样式，AppCompat支持库中为新老版本做了兼容和优化，因此推荐扩展支持库样式进行自定义我们的APP内组件样式 -->
     <!--material design中颜色分为3类，主色（APP屏幕上最常见的颜色）、辅助色（选中状态）、强调色（突出强调的UI）-->

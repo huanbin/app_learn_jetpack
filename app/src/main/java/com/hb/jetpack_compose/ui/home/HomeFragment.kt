@@ -6,8 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FavoriteBorder
@@ -21,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.hb.jetpack_compose.BottomNavigationViewHeight
 import com.hb.jetpack_compose.R
 import com.hb.jetpack_compose.model.ArticleItemData
 import com.hb.jetpack_compose.ui.BaseFragment
@@ -42,7 +42,15 @@ class HomeFragment : BaseFragment() {
 fun HomeScreen(viewModel: HomeViewModel, onNavigate: (Int) -> Unit) {
     val lazyListState = viewModel.lazyListState
     val pager = viewModel.pager.collectAsLazyPagingItems()
-    SwiperefreshLayout(lazyListState, pager) { index, value ->
+    val asPaddingValues = WindowInsets.systemBars.asPaddingValues()
+    SwiperefreshLayout(
+        contentPadding = PaddingValues(
+            top = asPaddingValues.calculateTopPadding(),
+            bottom = asPaddingValues.calculateBottomPadding() + BottomNavigationViewHeight.dp
+        ),
+        lazyListState,
+        pager
+    ) { index, value ->
         ArticleItemLayout(value = value) {
             onNavigate.invoke(R.id.list_item)
         }
