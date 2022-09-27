@@ -15,13 +15,14 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.accompanist.web.WebView
 import com.google.accompanist.web.rememberWebViewState
@@ -38,11 +39,11 @@ class ArticleDetailFragment : BaseFragment() {
         return createComposeView { Screen(viewModel) { findNavController().navigateUp() } }
     }
 
+    @OptIn(ExperimentalLifecycleComposeApi::class)
     @Composable
     fun Screen(viewModel: ArticleDetailViewModel, onNavigate: (id: Int) -> Unit) {
-        val urlState = viewModel.articleUrlState.collectAsState()
+        val urlState = viewModel.articleUrlState.collectAsStateWithLifecycle()
         val webViewState = rememberWebViewState(url = urlState.value)
-        print("文章link = ${urlState.value}")
         Column(modifier = Modifier.fillMaxSize()) {
             TopAppBar(
                 elevation = 0.dp,
