@@ -10,6 +10,10 @@
         android:name="com.hb.jetpack_compose.ui.home.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home">
+        <argument
+            android:name="url"
+            app:argType="string"
+            app:nullable="false" />
         <action
             android:id="@+id/list_item"
             app:destination="@id/nav_article_detail" />

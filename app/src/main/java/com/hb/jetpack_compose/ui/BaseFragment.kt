@@ -35,8 +35,7 @@ abstract class BaseFragment : Fragment() {
                             color = Color.Transparent, darkIcons = useDarkIcons
                         )
                         lightOrDarkStatusbar(
-                            isAppearanceLightStatusBars(),
-                            isAppearanceLightNavigationBars()
+                            isAppearanceLightStatusBars(), isAppearanceLightNavigationBars()
                         )
                     }
                     contentView.invoke()

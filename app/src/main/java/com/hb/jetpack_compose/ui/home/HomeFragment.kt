@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
+import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -33,7 +34,15 @@ class HomeFragment : BaseFragment() {
     ): View? {
         //确保viewmodel的生命周期（保存lazyListState）
         val viewModel by activityViewModels<HomeViewModel>()
-        return createComposeView { HomeScreen(viewModel) { findNavController().navigate(R.id.list_item) } }
+
+        return createComposeView {
+            HomeScreen(viewModel) {
+                findNavController().navigate(
+                    R.id.list_item,
+                    bundleOf("url" to it.link)
+                )
+            }
+        }
     }
 
     override fun isAppearanceLightStatusBars() = true
@@ -42,7 +51,7 @@ class HomeFragment : BaseFragment() {
 
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel, onNavigate: (Int) -> Unit) {
+fun HomeScreen(viewModel: HomeViewModel, onNavigate: (item: ArticleItemData) -> Unit) {
     val lazyListState = viewModel.lazyListState
     val pager = viewModel.pager.collectAsLazyPagingItems()
     val asPaddingValues = WindowInsets.systemBars.asPaddingValues()
@@ -53,7 +62,7 @@ fun HomeScreen(viewModel: HomeViewModel, onNavigate: (Int) -> Unit) {
         ), lazyListState, pager
     ) { index, value ->
         ArticleItemLayout(value = value) {
-            onNavigate.invoke(R.id.list_item)
+            onNavigate.invoke(value!!)
         }
     }
 }

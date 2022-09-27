@@ -24,4 +24,6 @@
     <!--    <color name="colorAccent">#FF4081</color>-->
     <color name="whiteColor">@android:color/white</color>
     <color name="blackColor">@android:color/black</color>
+    <color name="colorOnPrimary">@color/whiteColor</color>
+    <color name="colorOnSecondary">@color/blackColor</color>
 </resources>

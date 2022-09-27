@@ -81,6 +81,8 @@ dependencies {
     implementation "com.google.accompanist:accompanist-swiperefresh:$accompanist"
     //systemuicontroller
     implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist"
+    //webview
+    implementation "com.google.accompanist:accompanist-webview:$accompanist"
     //coil
     implementation("io.coil-kt:coil-compose:2.2.0")
     //引用工具lint
