@@ -7,14 +7,16 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import timber.log.Timber
+
 
 object RetrofitApi {
 
     const val BaseUrl = "https://www.wanandroid.com/"
 
 
-    private val okHttpClient: okhttp3.OkHttpClient by lazy {
-        val httpLoggingInterceptor = HttpLoggingInterceptor()
+    private val okHttpClient: OkHttpClient by lazy {
+        val httpLoggingInterceptor = HttpLoggingInterceptor { Timber.tag("OkHttp").d(it) }
         httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC)
         OkHttpClient.Builder().addInterceptor(httpLoggingInterceptor).build()
     }
