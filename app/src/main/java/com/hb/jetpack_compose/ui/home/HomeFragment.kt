@@ -38,8 +38,7 @@ class HomeFragment : BaseFragment() {
         return createComposeView {
             HomeScreen(viewModel) {
                 findNavController().navigate(
-                    R.id.list_item,
-                    bundleOf("url" to it.link)
+                    R.id.list_item, bundleOf("url" to it.link)
                 )
             }
         }
@@ -71,33 +70,43 @@ fun HomeScreen(viewModel: HomeViewModel, onNavigate: (item: ArticleItemData) -> 
 @Composable
 fun ArticleItemLayout(value: ArticleItemData?, onClickItem: (value: ArticleItemData?) -> Unit) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        ListItem(modifier = Modifier.clickable { onClickItem.invoke(value) },
-            icon = {
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(
-                        Icons.Outlined.FavoriteBorder,
-                        tint = colorResource(id = R.color.primaryColor),
-                        contentDescription = "收藏",
-                        modifier = Modifier
-                    )
-                }
-            },
-            secondaryText = null,
-            singleLineSecondaryText = false,
-            overlineText = null,
-            trailing = {
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(
-                        Icons.Outlined.MoreVert,
-                        tint = colorResource(id = R.color.primaryColor),
-                        contentDescription = "更多",
-                        modifier = Modifier.rotate(90f)
-                    )
-                }
-            },
-            text = {
-                Text(text = "${value?.title}")
-            })
-        Divider(color = Color.Black, thickness = 0.5.dp)
+        if (null == value) {
+            ListItem {
+                Text(
+                    text = "Loading...", modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentWidth()
+                )
+            }
+        } else {
+            ListItem(modifier = Modifier.clickable { onClickItem.invoke(value) },
+                icon = {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(
+                            Icons.Outlined.FavoriteBorder,
+                            tint = colorResource(id = R.color.primaryColor),
+                            contentDescription = "收藏",
+                            modifier = Modifier
+                        )
+                    }
+                },
+                secondaryText = null,
+                singleLineSecondaryText = false,
+                overlineText = null,
+                trailing = {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(
+                            Icons.Outlined.MoreVert,
+                            tint = colorResource(id = R.color.primaryColor),
+                            contentDescription = "更多",
+                            modifier = Modifier.rotate(90f)
+                        )
+                    }
+                },
+                text = {
+                    Text(text = "${value?.title}")
+                })
+        }
+        Divider(color = Color.LightGray, thickness = 0.5.dp)
     }
 }

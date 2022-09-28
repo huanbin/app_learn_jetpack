@@ -22,9 +22,10 @@ class HomeViewModel : ViewModel() {
     val pager = Pager(
         PagingConfig(
             pageSize = ArticleDataSource.PageSize,
-            enablePlaceholders = true,
 //            prefetchDistance=10,
-//            maxSize = 200,
+//            maxSize用于避免浪费更多内存资源，enablePlaceholders是配合maxSize一起，在用户滑动列表超过maxSize之后，用户反向滑动时暂时显示null item
+            enablePlaceholders = true,
+            maxSize = 200,
             initialLoadSize = 10
         )
     ) { ArticleDataSource() }.flow
