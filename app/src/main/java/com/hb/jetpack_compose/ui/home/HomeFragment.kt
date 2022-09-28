@@ -15,12 +15,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.paging.compose.collectAsLazyPagingItems
+import coil.compose.AsyncImage
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
 import com.hb.jetpack_compose.BottomNavigationViewHeight
 import com.hb.jetpack_compose.R
 import com.hb.jetpack_compose.model.ArticleItemData
@@ -38,7 +45,7 @@ class HomeFragment : BaseFragment() {
         return createComposeView {
             HomeScreen(viewModel) {
                 findNavController().navigate(
-                    R.id.list_item, bundleOf("url" to it.link)
+                    R.id.list_item, bundleOf("url" to it)
                 )
             }
         }
@@ -49,20 +56,46 @@ class HomeFragment : BaseFragment() {
 }
 
 
+@OptIn(ExperimentalPagerApi::class, ExperimentalLifecycleComposeApi::class)
 @Composable
-fun HomeScreen(viewModel: HomeViewModel, onNavigate: (item: ArticleItemData) -> Unit) {
+fun HomeScreen(viewModel: HomeViewModel, onNavigate: (urlArticle: String) -> Unit) {
     val lazyListState = viewModel.lazyListState
     val pager = viewModel.pager.collectAsLazyPagingItems()
     val asPaddingValues = WindowInsets.systemBars.asPaddingValues()
-    SwiperefreshLayout(
-        contentPadding = PaddingValues(
-            top = asPaddingValues.calculateTopPadding(),
-            bottom = asPaddingValues.calculateBottomPadding() + BottomNavigationViewHeight.dp
-        ), lazyListState, pager
-    ) { index, value ->
-        ArticleItemLayout(value = value) {
-            onNavigate.invoke(value!!)
+    val bannerState = viewModel.bannerStateFlow.collectAsStateWithLifecycle()
+    val pagerState = rememberPagerState()
+
+    SwiperefreshLayout(contentPadding = PaddingValues(
+        //top = asPaddingValues.calculateTopPadding(),
+        bottom = asPaddingValues.calculateBottomPadding() + BottomNavigationViewHeight.dp
+    ),
+        lazyListState = lazyListState,
+        lazyPagingItems = pager,
+        itemLayout = { index, value ->
+            ArticleItemLayout(value = value) {
+                onNavigate.invoke(value!!.link)
+            }
+        }) {
+        HorizontalPager(
+            count = bannerState.value.size,
+//            contentPadding = PaddingValues(
+//                top = asPaddingValues.calculateTopPadding()
+//            ),
+            state = pagerState, modifier = Modifier
+                .clickable {
+                    onNavigate?.invoke(bannerState.value[pagerState.currentPage].url)
+                }
+                .fillMaxWidth()
+                .fillMaxHeight(0.25f)
+        ) { page ->
+            AsyncImage(
+                model = bannerState.value[page].imagePath,
+                contentDescription = "",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
         }
+        Divider(color = Color.LightGray, thickness = 4.dp)
     }
 }
 

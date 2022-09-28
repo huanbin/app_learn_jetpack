@@ -33,7 +33,8 @@ fun <T : Any> SwiperefreshLayout(
     contentPadding: PaddingValues = PaddingValues(0.dp),
     lazyListState: LazyListState,
     lazyPagingItems: LazyPagingItems<T>,
-    itemLayout: @Composable (index: Int, value: T?) -> Unit
+    itemLayout: @Composable (index: Int, value: T?) -> Unit,
+    itemHeaderLayout: (@Composable () -> Unit)? = null
 ) {
 
     val rememberSwipeRefreshState =
@@ -76,7 +77,9 @@ fun <T : Any> SwiperefreshLayout(
                 }
             }
 
-
+            item {
+                itemHeaderLayout?.invoke()
+            }
             itemsIndexed(lazyPagingItems) { index, value ->
                 itemLayout(index, value)
             }
