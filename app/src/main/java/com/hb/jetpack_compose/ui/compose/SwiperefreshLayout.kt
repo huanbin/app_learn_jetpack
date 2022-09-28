@@ -5,10 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.LinearProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
@@ -30,6 +27,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.hb.jetpack_compose.R
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun <T : Any> SwiperefreshLayout(
     contentPadding: PaddingValues = PaddingValues(0.dp),
@@ -95,14 +93,13 @@ fun <T : Any> SwiperefreshLayout(
                     )
                 }
             }
-        }
-
-        if (lazyPagingItems.loadState.source.refresh is LoadState.NotLoading) {
-            val refresh = lazyPagingItems.loadState.source.refresh
-            if (refresh.endOfPaginationReached) {
-                println("到达最后，没有更多数据")
-            } else {
-                println("没有到达最后，可以加载下一页数据")
+//            空页面
+            if (lazyPagingItems.loadState.source.refresh is LoadState.NotLoading && lazyPagingItems.itemCount == 0) {
+                item {
+                    ListItem {
+                        Text(text = "暂时没有数据")
+                    }
+                }
             }
         }
 
