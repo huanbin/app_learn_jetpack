@@ -4,17 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
@@ -24,6 +22,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.fragment.findNavController
+import com.google.accompanist.web.AccompanistWebViewClient
+import com.google.accompanist.web.LoadingState
 import com.google.accompanist.web.WebView
 import com.google.accompanist.web.rememberWebViewState
 import com.hb.jetpack_compose.R
@@ -44,6 +44,7 @@ class ArticleDetailFragment : BaseFragment() {
     fun Screen(viewModel: ArticleDetailViewModel, onNavigate: (id: Int) -> Unit) {
         val urlState = viewModel.articleUrlState.collectAsStateWithLifecycle()
         val webViewState = rememberWebViewState(url = urlState.value)
+
         Column(modifier = Modifier.fillMaxSize()) {
             TopAppBar(
                 elevation = 0.dp,
@@ -64,13 +65,39 @@ class ArticleDetailFragment : BaseFragment() {
                     color = colorResource(id = R.color.colorOnPrimary)
                 )
             }
+            Box(modifier = Modifier.fillMaxSize()) {
 
-            WebView(state = webViewState, onCreated = {
-                //必须添加，否则很多网页无法正常打开
-                it.settings.javaScriptEnabled = true
-                it.settings.domStorageEnabled = true
-                it.settings.databaseEnabled = true
-            })
+                WebView(state = webViewState, onCreated = {
+                    //必须添加，否则很多网页无法正常打开
+                    it.settings.javaScriptEnabled = true
+                    it.settings.domStorageEnabled = true
+                    it.settings.databaseEnabled = true
+                }, client = remember {
+                    CustomWebViewClient()
+                })
+
+                CircularProgressIndicator(
+                    progress = if (webViewState.loadingState is LoadingState.Loading) (webViewState.loadingState as LoadingState.Loading).progress else 0f,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .wrapContentSize()
+                )
+            }
+        }
+    }
+
+    class CustomWebViewClient : AccompanistWebViewClient() {
+        override fun shouldOverrideUrlLoading(
+            view: WebView?, request: WebResourceRequest?
+        ): Boolean {
+            println("shouldOverrideUrlLoading = ${request?.url.toString()}")
+
+            if (request?.url.toString().startsWith("http") or request?.url.toString()
+                    .startsWith("https")
+            ) {
+                return super.shouldOverrideUrlLoading(view, request)
+            }
+            return true
         }
     }
 }
