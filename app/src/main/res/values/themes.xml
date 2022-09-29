@@ -9,6 +9,8 @@
         <!--辅助色，用于强调突出组件，比如FAB按钮、当前用户选中的控件（checkbox的选中状态颜色）-->
         <item name="colorSecondary">@color/primaryLightColor</item>
         <!--颜色变体用于补充和提供访问选项？？？没明白,但是Material上标注statusbar使用该颜色-->
+        <!--一定要注意AppCompatTheme库（实现xml主题适配compose主题），颜色对应表-->
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorPrimaryVariant">@color/primaryDarkColor</item>
         <!--用于状态栏和导航栏-->
         <!-- <item name="colorPrimaryDark">?attr/colorPrimaryVariant</item>-->
