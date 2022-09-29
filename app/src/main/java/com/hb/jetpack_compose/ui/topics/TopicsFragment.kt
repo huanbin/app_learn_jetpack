@@ -2,20 +2,33 @@ package com.hb.jetpack_compose.ui.topics
 
 import android.os.Build
 import android.os.Bundle
-import android.view.*
-import android.widget.TextView
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.sp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.pagerTabIndicatorOffset
+import com.google.accompanist.pager.rememberPagerState
 import com.hb.jetpack_compose.databinding.FragmentGalleryBinding
+import com.hb.jetpack_compose.ui.BaseFragment
 
-class TopicsFragment : Fragment() {
+class TopicsFragment : BaseFragment() {
 
     private var _binding: FragmentGalleryBinding? = null
 
@@ -25,46 +38,91 @@ class TopicsFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        val topicsViewModel =
-            ViewModelProvider(this).get(TopicsViewModel::class.java)
+        val topicsViewModel by activityViewModels<TopicsViewModel>()
 
-        _binding = FragmentGalleryBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        return createComposeView {
+            Screen(viewModel = topicsViewModel)
+        }
+    }
 
-        val textView: TextView = binding.textGallery
-        topicsViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+    @OptIn(ExperimentalPagerApi::class, ExperimentalLifecycleComposeApi::class)
+    @Composable
+    fun Screen(viewModel: TopicsViewModel) {
+        val pagerState = rememberPagerState()
+        val pages by viewModel.pages.collectAsStateWithLifecycle()
+        var selectedIndex by remember {
+            mutableStateOf(pagerState.currentPage)
         }
 
-        binding.button3.setOnClickListener {
-//            showOrHideSoftKeyboard()
-//            showOrHideSystembars()
-            lightOrDarkStatusbar()
+        LaunchedEffect(selectedIndex) {
+            pagerState.animateScrollToPage(selectedIndex)
         }
-        return root
+
+        Column(
+            modifier = Modifier
+                .background(MaterialTheme.colors.primaryVariant)
+                .padding(
+                    top = WindowInsets.statusBars
+                        .asPaddingValues()
+                        .calculateTopPadding()
+                )
+        ) {
+            ScrollableTabRow(
+                // Our selected tab is our current page
+                selectedTabIndex = pagerState.currentPage,
+                // Override the indicator, using the provided pagerTabIndicatorOffset modifier
+                indicator = { tabPositions ->
+                    TabRowDefaults.Indicator(
+                        Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                    )
+                }) {
+                // Add tabs for all of our pages
+                pages.forEachIndexed { index, tab ->
+                    Tab(
+                        text = {
+                            Text(text = tab.name, fontSize = 26.sp)
+                        },
+                        selected = pagerState.currentPage == index,
+                        onClick = {
+                            selectedIndex = index
+                        },
+                    )
+                }
+            }
+
+            HorizontalPager(
+                count = pages.size,
+                state = pagerState,
+            ) { page ->
+                Card(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Blue)
+                ) {
+                    Text(text = "card  ${pages[page]}")
+                }
+            }
+        }
     }
 
     private fun lightOrDarkStatusbar() {
         //获取WindowInsetsController
         val insetsController = WindowCompat.getInsetsController(
-            requireActivity().window,
-            requireActivity().window.decorView
+            requireActivity().window, requireActivity().window.decorView
         )
         //没有效果
-        insetsController.isAppearanceLightStatusBars=!insetsController.isAppearanceLightStatusBars
-        insetsController.isAppearanceLightNavigationBars=!insetsController.isAppearanceLightNavigationBars
+        insetsController.isAppearanceLightStatusBars = !insetsController.isAppearanceLightStatusBars
+        insetsController.isAppearanceLightNavigationBars =
+            !insetsController.isAppearanceLightNavigationBars
     }
 
     //曾经的沉浸式状态栏，如此简单
     private fun showOrHideSystembars() {
         //获取WindowInsetsController
         val insetsController = WindowCompat.getInsetsController(
-            requireActivity().window,
-            binding.editTextTextPersonName
+            requireActivity().window, binding.editTextTextPersonName
         )
         //设置在sytembar隐藏之后，如何再次滑出systembar
 //        用户在sytembar边缘swipe滑动就会出现systembar
@@ -80,8 +138,7 @@ class TopicsFragment : Fragment() {
     private fun showOrHideSoftKeyboard() {
         //获取WindowInsetsController
         val insetsController = WindowCompat.getInsetsController(
-            requireActivity().window,
-            binding.editTextTextPersonName
+            requireActivity().window, binding.editTextTextPersonName
         )
         //判断键盘是否弹出,任何view都可以
         //val rootWindowInsets =ViewCompat.getRootWindowInsets(binding.button3)
@@ -94,10 +151,5 @@ class TopicsFragment : Fragment() {
         } else {
             insetsController.show(WindowInsetsCompat.Type.ime())
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }
