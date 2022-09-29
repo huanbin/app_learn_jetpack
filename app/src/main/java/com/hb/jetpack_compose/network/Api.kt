@@ -28,6 +28,7 @@ interface Api {
     @GET("project/list/{page}/json")
     suspend fun getProjectList(
         @Path("page") page: Int,
+        @Query("page_size") pageSize: Int,
         @Query("cid") cid: Int
     ): ApiResult<ProjectListResult>
 }
