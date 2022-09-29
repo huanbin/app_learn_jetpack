@@ -9,10 +9,10 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -21,12 +21,15 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.hb.jetpack_compose.databinding.FragmentGalleryBinding
 import com.hb.jetpack_compose.ui.BaseFragment
+import com.hb.jetpack_compose.ui.compose.SwiperefreshLayout
+import com.hb.jetpack_compose.ui.home.ArticleItemLayout
 
 class TopicsFragment : BaseFragment() {
 
@@ -52,6 +55,7 @@ class TopicsFragment : BaseFragment() {
     fun Screen(viewModel: TopicsViewModel) {
         val pagerState = rememberPagerState()
         val pages by viewModel.pages.collectAsStateWithLifecycle()
+        val lazyPagingItems = viewModel.projectPagerFlow.collectAsLazyPagingItems()
         var selectedIndex by remember {
             mutableStateOf(pagerState.currentPage)
         }
@@ -68,16 +72,14 @@ class TopicsFragment : BaseFragment() {
             }
         }
 
-        Column(
-            modifier = Modifier
+        Column {
+            ScrollableTabRow(modifier = Modifier
                 .background(MaterialTheme.colors.primaryVariant)
                 .padding(
                     top = WindowInsets.statusBars
                         .asPaddingValues()
                         .calculateTopPadding()
-                )
-        ) {
-            ScrollableTabRow(
+                ),
                 // Our selected tab is our current page
                 selectedTabIndex = pagerState.currentPage,
                 // Override the indicator, using the provided pagerTabIndicatorOffset modifier
@@ -90,7 +92,7 @@ class TopicsFragment : BaseFragment() {
                 pages.forEachIndexed { index, tab ->
                     Tab(
                         text = {
-                            Text(text = tab.name, fontSize = 26.sp)
+                            Text(text = tab.name, fontSize = 20.sp)
                         },
                         selected = pagerState.currentPage == index,
                         onClick = {
@@ -104,13 +106,13 @@ class TopicsFragment : BaseFragment() {
                 count = pages.size,
                 state = pagerState,
             ) { page ->
-                Card(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Blue)
-                ) {
-                    Text(text = "card  ${pages[page]}")
-                }
+                SwiperefreshLayout(lazyListState = rememberLazyListState(),
+                    lazyPagingItems = lazyPagingItems,
+                    itemLayout = { _, data ->
+                        ArticleItemLayout(value = data, onClickItem = {
+
+                        })
+                    })
             }
         }
     }
