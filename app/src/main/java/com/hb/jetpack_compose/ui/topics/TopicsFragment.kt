@@ -57,7 +57,15 @@ class TopicsFragment : BaseFragment() {
         }
 
         LaunchedEffect(selectedIndex) {
-            pagerState.animateScrollToPage(selectedIndex)
+            //pagerState.animateScrollToPage(selectedIndex)
+            pagerState.scrollToPage(selectedIndex)
+        }
+
+        //监听pagerState状态，当用户滑动页面，更新selectedIndex，避免用户滑动之后无法再次选中上次的tab
+        LaunchedEffect(pagerState) {
+            snapshotFlow { pagerState.currentPage }.collect {
+                selectedIndex = it
+            }
         }
 
         Column(
