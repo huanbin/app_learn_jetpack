@@ -10,10 +10,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
@@ -107,32 +105,32 @@ fun ArticleItemLayout(value: ArticleItemData?, onClickItem: (value: ArticleItemD
                 )
             }
         } else {
-            ListItem(modifier = Modifier.clickable { onClickItem.invoke(value) },
-                icon = {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(
-                            Icons.Outlined.FavoriteBorder,
-                            tint = colorResource(id = R.color.primaryColor),
-                            contentDescription = "收藏",
-                            modifier = Modifier
-                        )
-                    }
-                },
-                secondaryText = null,
-                singleLineSecondaryText = false,
-                overlineText = null,
-                trailing = {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(
-                            Icons.Outlined.MoreVert,
-                            tint = colorResource(id = R.color.primaryColor),
-                            contentDescription = "更多",
-                            modifier = Modifier.rotate(90f)
-                        )
-                    }
-                },
+            ListItem(modifier = Modifier
+                .clickable { onClickItem.invoke(value) }
+                .padding(vertical = 16.dp), icon = {
+                IconToggleButton(checked = false, onCheckedChange = {
+
+                }, content = {
+                    Icon(
+                        Icons.Outlined.FavoriteBorder,
+                        tint = colorResource(id = R.color.primaryColor),
+                        contentDescription = "收藏",
+                        modifier = Modifier
+                    )
+                })
+            }, secondaryText = null, singleLineSecondaryText = false, overlineText = null,
+//                trailing = {
+//                    IconButton(onClick = { /*TODO*/ }) {
+//                        Icon(
+//                            Icons.Outlined.MoreVert,
+//                            tint = colorResource(id = R.color.primaryColor),
+//                            contentDescription = "更多",
+//                            modifier = Modifier.rotate(90f)
+//                        )
+//                    }
+//                },
                 text = {
-                    Text(text = "${value?.title}")
+                    Text(text = "${value?.title}", maxLines = 3)
                 })
         }
         Divider(color = Color.LightGray, thickness = 0.5.dp)
