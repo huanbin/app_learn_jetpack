@@ -3,14 +3,11 @@ package com.hb.jetpack_compose.ui.topics
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.google.accompanist.pager.ExperimentalPagerApi
 import com.hb.jetpack_compose.network.RetrofitApi
 import com.hb.jetpack_compose.repository.pagerFlow
 import kotlinx.coroutines.flow.*
 
-@OptIn(ExperimentalPagerApi::class)
 class TopicsViewModel : ViewModel() {
-
 
     val projectCategoryList = flow {
         val categoryList = RetrofitApi.getInstance().getProjectCategory().data

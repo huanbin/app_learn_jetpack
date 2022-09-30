@@ -9,7 +9,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.activityViewModels
@@ -51,11 +54,8 @@ class TopicsFragment : BaseFragment() {
     fun Screen(viewModel: TopicsViewModel, onNavgate: (url: String) -> Unit) {
         val pagerState = rememberPagerState()
         val projectCategoryList by viewModel.projectCategoryList.collectAsStateWithLifecycle()
-        val index by viewModel.index.collectAsStateWithLifecycle()
+        val selectedIndex by viewModel.index.collectAsStateWithLifecycle()
         val lazyPagingItems = viewModel.projectPagerFlow.collectAsLazyPagingItems()
-        var selectedIndex by remember {
-            mutableStateOf(pagerState.currentPage)
-        }
 
         LaunchedEffect(selectedIndex) {
             //pagerState.animateScrollToPage(selectedIndex)
@@ -67,7 +67,6 @@ class TopicsFragment : BaseFragment() {
         LaunchedEffect(pagerState) {
             snapshotFlow { pagerState.currentPage }.collect {
                 //只要pagerState.currentPage发生改变，就收集状态
-                selectedIndex = it
                 viewModel.updateIndex(it)
             }
         }
@@ -96,7 +95,7 @@ class TopicsFragment : BaseFragment() {
                         },
                         selected = pagerState.currentPage == index,
                         onClick = {
-                            selectedIndex = index
+                            viewModel.updateIndex(index)
                         },
                     )
                 }
