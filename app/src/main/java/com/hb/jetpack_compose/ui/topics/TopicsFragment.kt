@@ -50,7 +50,8 @@ class TopicsFragment : BaseFragment() {
     @Composable
     fun Screen(viewModel: TopicsViewModel, onNavgate: (url: String) -> Unit) {
         val pagerState = rememberPagerState()
-        val pages by viewModel.pages.collectAsStateWithLifecycle()
+        val projectCategoryList by viewModel.projectCategoryList.collectAsStateWithLifecycle()
+        val index by viewModel.index.collectAsStateWithLifecycle()
         val lazyPagingItems = viewModel.projectPagerFlow.collectAsLazyPagingItems()
         var selectedIndex by remember {
             mutableStateOf(pagerState.currentPage)
@@ -62,9 +63,12 @@ class TopicsFragment : BaseFragment() {
         }
 
         //监听pagerState状态，当用户滑动页面，更新selectedIndex，避免用户滑动之后无法再次选中上次的tab
+        //LaunchedEffect跟随组合的声明周期运行，每次重组都会执行
         LaunchedEffect(pagerState) {
             snapshotFlow { pagerState.currentPage }.collect {
+                //只要pagerState.currentPage发生改变，就收集状态
                 selectedIndex = it
+                viewModel.updateIndex(it)
             }
         }
 
@@ -85,7 +89,7 @@ class TopicsFragment : BaseFragment() {
                     )
                 }) {
                 // Add tabs for all of our pages
-                pages.forEachIndexed { index, tab ->
+                projectCategoryList.forEachIndexed { index, tab ->
                     Tab(
                         text = {
                             Text(text = tab.name, fontSize = 20.sp)
@@ -99,7 +103,7 @@ class TopicsFragment : BaseFragment() {
             }
 
             HorizontalPager(
-                count = pages.size,
+                count = projectCategoryList.size,
                 state = pagerState,
             ) { page ->
                 SwiperefreshLayout(lazyListState = rememberLazyListState(),

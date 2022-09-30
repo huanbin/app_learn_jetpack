@@ -1,29 +1,37 @@
 package com.hb.jetpack_compose.ui.topics
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import com.google.accompanist.pager.ExperimentalPagerApi
 import com.hb.jetpack_compose.network.RetrofitApi
 import com.hb.jetpack_compose.repository.pagerFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 
+@OptIn(ExperimentalPagerApi::class)
 class TopicsViewModel : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is gallery Fragment"
-    }
-    val text: LiveData<String> = _text
 
-    val pages = flow {
+    val projectCategoryList = flow {
         val categoryList = RetrofitApi.getInstance().getProjectCategory().data
         emit(categoryList)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
 
-    val projectPagerFlow = pagerFlow { page, pageSize ->
-        getProjectList(page, pageSize, 1).data.datas
+    val index = MutableStateFlow(0)
+
+    val projectPagerFlow = projectCategoryList.filter { it.isNotEmpty() }.combine(index) { a, b ->
+        a[b]
+    }.flatMapLatest {
+        pagerFlow { page, pageSize ->
+            getProjectList(page, pageSize, it.id).data.datas
+        }
     }.cachedIn(viewModelScope)
+
+//    val projectPagerFlow = pagerFlow { page, pageSize ->
+//        getProjectList(page, pageSize, it.id).data.datas
+//    }.cachedIn(viewModelScope)
+
+    fun updateIndex(it: Int) {
+        index.value = it
+    }
 }
