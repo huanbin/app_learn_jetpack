@@ -1,12 +1,10 @@
 package com.hb.jetpack_compose.ui.topics
 
-import android.os.Build
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -14,45 +12,43 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavDeepLinkRequest
+import androidx.navigation.fragment.findNavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
-import com.hb.jetpack_compose.databinding.FragmentGalleryBinding
 import com.hb.jetpack_compose.ui.BaseFragment
 import com.hb.jetpack_compose.ui.compose.SwiperefreshLayout
 import com.hb.jetpack_compose.ui.home.ArticleItemLayout
 
 class TopicsFragment : BaseFragment() {
 
-    private var _binding: FragmentGalleryBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
-
-    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         val topicsViewModel by activityViewModels<TopicsViewModel>()
-
         return createComposeView {
-            Screen(viewModel = topicsViewModel)
+            Screen(viewModel = topicsViewModel) {
+                findNavController().navigate(
+                    //这里有一个bug
+                    // 传递uri中必须有http，否则ViewModel中无法获取参数值。但是导航中定义deepLink时uri可以设置为hb.com/articles?url={url}
+                    NavDeepLinkRequest.Builder.fromUri(Uri.parse("http://hb.com/articles?url=${it}"))
+                        .setAction("android.intent.action.ACTION_READ_ARTICLE")
+                        .setMimeType("type/subtype").build()
+                )
+            }
         }
     }
 
     @OptIn(ExperimentalPagerApi::class, ExperimentalLifecycleComposeApi::class)
     @Composable
-    fun Screen(viewModel: TopicsViewModel) {
+    fun Screen(viewModel: TopicsViewModel, onNavgate: (url: String) -> Unit) {
         val pagerState = rememberPagerState()
         val pages by viewModel.pages.collectAsStateWithLifecycle()
         val lazyPagingItems = viewModel.projectPagerFlow.collectAsLazyPagingItems()
@@ -110,56 +106,10 @@ class TopicsFragment : BaseFragment() {
                     lazyPagingItems = lazyPagingItems,
                     itemLayout = { _, data ->
                         ArticleItemLayout(value = data, onClickItem = {
-
+                            onNavgate.invoke(it!!.link)
                         })
                     })
             }
-        }
-    }
-
-    private fun lightOrDarkStatusbar() {
-        //获取WindowInsetsController
-        val insetsController = WindowCompat.getInsetsController(
-            requireActivity().window, requireActivity().window.decorView
-        )
-        //没有效果
-        insetsController.isAppearanceLightStatusBars = !insetsController.isAppearanceLightStatusBars
-        insetsController.isAppearanceLightNavigationBars =
-            !insetsController.isAppearanceLightNavigationBars
-    }
-
-    //曾经的沉浸式状态栏，如此简单
-    private fun showOrHideSystembars() {
-        //获取WindowInsetsController
-        val insetsController = WindowCompat.getInsetsController(
-            requireActivity().window, binding.editTextTextPersonName
-        )
-        //设置在sytembar隐藏之后，如何再次滑出systembar
-//        用户在sytembar边缘swipe滑动就会出现systembar
-//        insetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_BARS_BY_SWIPE
-//        用户只要点击屏幕就会出现sytembar
-//        insetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_BARS_BY_TOUCH
-//        用户在systembar边缘swipe滑动就会出现systembar，只不过显示一会之后会立即隐藏systembar
-        insetsController.systemBarsBehavior =
-            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        insetsController.hide(WindowInsetsCompat.Type.systemBars())
-    }
-
-    private fun showOrHideSoftKeyboard() {
-        //获取WindowInsetsController
-        val insetsController = WindowCompat.getInsetsController(
-            requireActivity().window, binding.editTextTextPersonName
-        )
-        //判断键盘是否弹出,任何view都可以
-        //val rootWindowInsets =ViewCompat.getRootWindowInsets(binding.button3)
-        val rootWindowInsets = ViewCompat.getRootWindowInsets(binding.editTextTextPersonName)
-        var showSoftKeyboard = rootWindowInsets?.isVisible(WindowInsetsCompat.Type.ime()) ?: false
-        Toast.makeText(context, if (showSoftKeyboard) "键盘打开了" else "键盘关闭了", Toast.LENGTH_SHORT)
-            .show()
-        if (showSoftKeyboard) {
-            insetsController.hide(WindowInsetsCompat.Type.ime())
-        } else {
-            insetsController.show(WindowInsetsCompat.Type.ime())
         }
     }
 }

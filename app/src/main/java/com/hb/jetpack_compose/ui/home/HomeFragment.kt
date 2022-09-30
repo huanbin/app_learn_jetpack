@@ -68,16 +68,12 @@ fun HomeScreen(viewModel: HomeViewModel, onNavigate: (urlArticle: String) -> Uni
     SwiperefreshLayout(contentPadding = PaddingValues(
         //top = asPaddingValues.calculateTopPadding(),
         bottom = asPaddingValues.calculateBottomPadding() + BottomNavigationViewHeight.dp
-    ),
-        lazyListState = lazyListState,
-        lazyPagingItems = pager,
-        itemLayout = { index, value ->
-            ArticleItemLayout(value = value) {
-                onNavigate.invoke(value!!.link)
-            }
-        }) {
-        HorizontalPager(
-            count = bannerState.value.size,
+    ), lazyListState = lazyListState, lazyPagingItems = pager, itemLayout = { index, value ->
+        ArticleItemLayout(value = value) {
+            onNavigate.invoke(value!!.link)
+        }
+    }) {
+        HorizontalPager(count = bannerState.value.size,
 //            contentPadding = PaddingValues(
 //                top = asPaddingValues.calculateTopPadding()
 //            ),
@@ -86,8 +82,7 @@ fun HomeScreen(viewModel: HomeViewModel, onNavigate: (urlArticle: String) -> Uni
                     onNavigate?.invoke(bannerState.value[pagerState.currentPage].url)
                 }
                 .fillMaxWidth()
-                .fillMaxHeight(0.25f)
-        ) { page ->
+                .fillMaxHeight(0.25f)) { page ->
             AsyncImage(
                 model = bannerState.value[page].imagePath,
                 contentDescription = "",
