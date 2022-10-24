@@ -1,10 +1,6 @@
 package com.hb.jetpack_compose.ui.home
 
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -17,11 +13,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
-import androidx.core.os.bundleOf
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.fragment.findNavController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -30,34 +24,12 @@ import com.google.accompanist.pager.rememberPagerState
 import com.hb.jetpack_compose.BottomNavigationViewHeight
 import com.hb.jetpack_compose.R
 import com.hb.jetpack_compose.model.ArticleItemData
-import com.hb.jetpack_compose.ui.BaseFragment
 import com.hb.jetpack_compose.ui.compose.SwiperefreshLayout
-
-class HomeFragment : BaseFragment() {
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
-        //确保viewmodel的生命周期（保存lazyListState）
-        val viewModel by activityViewModels<HomeViewModel>()
-
-        return createComposeView {
-            HomeScreen(viewModel) {
-                findNavController().navigate(
-                    R.id.list_item, bundleOf("url" to it)
-                )
-            }
-        }
-    }
-
-    override fun isAppearanceLightStatusBars() = true
-    override fun isAppearanceLightNavigationBars() = true
-}
 
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalLifecycleComposeApi::class)
 @Composable
-fun HomeScreen(viewModel: HomeViewModel, onNavigate: (urlArticle: String) -> Unit) {
+fun HomeScreen(viewModel: HomeViewModel = viewModel(), onNavigate: (urlArticle: String) -> Unit) {
     val lazyListState = rememberLazyListState()
     val pager = viewModel.pager.collectAsLazyPagingItems()
     val asPaddingValues = WindowInsets.systemBars.asPaddingValues()
