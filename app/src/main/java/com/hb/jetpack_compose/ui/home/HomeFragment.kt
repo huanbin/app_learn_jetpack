@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FavoriteBorder
@@ -57,7 +58,7 @@ class HomeFragment : BaseFragment() {
 @OptIn(ExperimentalPagerApi::class, ExperimentalLifecycleComposeApi::class)
 @Composable
 fun HomeScreen(viewModel: HomeViewModel, onNavigate: (urlArticle: String) -> Unit) {
-    val lazyListState = viewModel.lazyListState
+    val lazyListState = rememberLazyListState()
     val pager = viewModel.pager.collectAsLazyPagingItems()
     val asPaddingValues = WindowInsets.systemBars.asPaddingValues()
     val bannerState = viewModel.bannerStateFlow.collectAsStateWithLifecycle()
