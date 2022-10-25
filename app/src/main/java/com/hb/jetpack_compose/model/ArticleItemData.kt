@@ -29,7 +29,7 @@ data class ArticleItemData(
     val publishTime: Long,
     val realSuperChapterId: Int,
     val selfVisible: Int,
-    val shareDate: Long,
+    val shareDate: Long?,
     val shareUser: String,
     val superChapterId: Int,
     val superChapterName: String,
