@@ -1,4 +1,4 @@
-package com.hb.jetpack_compose.ui.compose
+package com.hb.jetpack_compose.ui.component
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.foundation.clickable
