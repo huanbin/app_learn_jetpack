@@ -8,7 +8,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
-import com.hb.jetpack_compose.ui.HbNavHost
+import com.hb.jetpack_compose.ui.nav.HbNavHost
 import com.hb.jetpack_compose.ui.nav.HbNavigation
 
 const val BottomNavigationViewHeight = 64
