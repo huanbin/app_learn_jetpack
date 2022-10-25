@@ -24,7 +24,7 @@ import com.google.accompanist.pager.rememberPagerState
 import com.hb.jetpack_compose.BottomNavigationViewHeight
 import com.hb.jetpack_compose.R
 import com.hb.jetpack_compose.model.ArticleItemData
-import com.hb.jetpack_compose.ui.compose.SwiperefreshLayout
+import com.hb.jetpack_compose.ui.component.SwiperefreshLayout
 
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalLifecycleComposeApi::class)

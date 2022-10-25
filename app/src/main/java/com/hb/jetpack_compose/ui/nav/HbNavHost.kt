@@ -1,4 +1,4 @@
-package com.hb.jetpack_compose.ui
+package com.hb.jetpack_compose.ui.nav
 
 import android.net.Uri
 import androidx.annotation.DrawableRes

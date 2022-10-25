@@ -18,7 +18,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
-import com.hb.jetpack_compose.ui.compose.SwiperefreshLayout
+import com.hb.jetpack_compose.ui.component.SwiperefreshLayout
 import com.hb.jetpack_compose.ui.home.ArticleItemLayout
 
 
