@@ -22,4 +22,4 @@ fun ViewModel.pagerFlow(loadData: suspend Api.(page: Int, pageSize: Int) -> List
                 // return getHomeArticleList(page, pageSize).data.articleItemData
             }
         }
-    }.flow
+    }
