@@ -5,30 +5,28 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.hb.jetpack_compose.network.RetrofitApi
 import com.hb.jetpack_compose.repository.pagerFlow
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.stateIn
 
 class TopicsViewModel : ViewModel() {
 
     val projectCategoryList = flow {
+        println("projectCategoryList")
         val categoryList = RetrofitApi.getInstance().getProjectCategory().data
         emit(categoryList)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
 
-    val index = MutableStateFlow(0)
+    private val index = MutableStateFlow(0)
 
-    val projectPagerFlow = projectCategoryList.filter { it.isNotEmpty() }.combine(index) { a, b ->
-        a[b]
-    }.flatMapLatest {
-        pagerFlow { page, pageSize ->
-            getProjectList(page, pageSize, it.id).data.datas
-        }
-    }.cachedIn(viewModelScope)
+    val projectPagerFlow
+        get() = pagerFlow { page, pageSize ->
+            getProjectList(page, pageSize, projectCategoryList.value[index.value].id).data.datas
+        }.flow.cachedIn(viewModelScope)
 
-//    val projectPagerFlow = pagerFlow { page, pageSize ->
-//        getProjectList(page, pageSize, it.id).data.datas
-//    }.cachedIn(viewModelScope)
 
-    fun updateIndex(it: Int) {
-        index.value = it
+    fun updateIndex(value: Int) {
+        index.value = value
     }
 }

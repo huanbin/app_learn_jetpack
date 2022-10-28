@@ -4,10 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
@@ -20,32 +17,30 @@ import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.hb.jetpack_compose.ui.component.SwiperefreshLayout
 import com.hb.jetpack_compose.ui.home.ArticleItemLayout
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalLifecycleComposeApi::class)
 @Composable
 fun TopicScreen(
-    viewModel: TopicsViewModel = viewModel(),
-    onNavgate: (url: String) -> Unit
+    viewModel: TopicsViewModel = viewModel(), onNavgate: (url: String) -> Unit
 ) {
     val pagerState = rememberPagerState()
     val projectCategoryList by viewModel.projectCategoryList.collectAsStateWithLifecycle()
-    val selectedIndex by viewModel.index.collectAsStateWithLifecycle()
     val lazyPagingItems = viewModel.projectPagerFlow.collectAsLazyPagingItems()
-
-    LaunchedEffect(selectedIndex) {
-        //pagerState.animateScrollToPage(selectedIndex)
-        pagerState.scrollToPage(selectedIndex)
+    val pagerLazyListState = projectCategoryList.associate {
+        key(it.id) {
+            it.id to rememberLazyListState()
+        }
     }
 
     //监听pagerState状态，当用户滑动页面，更新selectedIndex，避免用户滑动之后无法再次选中上次的tab
     //LaunchedEffect跟随组合的声明周期运行，每次重组都会执行
-    LaunchedEffect(pagerState) {
-        snapshotFlow { pagerState.currentPage }.collect {
-            //只要pagerState.currentPage发生改变，就收集状态
-            viewModel.updateIndex(it)
-        }
+    LaunchedEffect(pagerState.currentPage) {
+        viewModel.updateIndex(pagerState.currentPage)
     }
+
+    val coroutineScope = rememberCoroutineScope()
 
     Column {
         ScrollableTabRow(modifier = Modifier
@@ -71,7 +66,10 @@ fun TopicScreen(
                     },
                     selected = pagerState.currentPage == index,
                     onClick = {
-                        viewModel.updateIndex(index)
+                        //viewModel.updateIndex(index)
+                        coroutineScope.launch {
+                            pagerState.scrollToPage(index)
+                        }
                     },
                 )
             }
@@ -81,13 +79,13 @@ fun TopicScreen(
             count = projectCategoryList.size,
             state = pagerState,
         ) { page ->
-            SwiperefreshLayout(lazyListState = rememberLazyListState(),
-                lazyPagingItems = lazyPagingItems,
-                itemLayout = { _, data ->
-                    ArticleItemLayout(value = data, onClickItem = {
-                        onNavgate.invoke(it!!.link)
-                    })
+            SwiperefreshLayout(lazyListState = pagerLazyListState.getValue(
+                projectCategoryList[pagerState.currentPage].id
+            ), lazyPagingItems = lazyPagingItems, itemLayout = { _, data ->
+                ArticleItemLayout(value = data, onClickItem = {
+                    onNavgate.invoke(it!!.link)
                 })
+            })
         }
     }
 }

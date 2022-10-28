@@ -12,14 +12,18 @@ import com.hb.jetpack_compose.ui.detail.DetailScreen
 import com.hb.jetpack_compose.ui.home.HomeScreen
 import com.hb.jetpack_compose.ui.setting.SettingScreen
 import com.hb.jetpack_compose.ui.topics.TopicScreen
+import timber.log.Timber
 
 @Composable
 fun HbNavHost(controller: NavHostController, modifier: Modifier) {
+    Timber.tag("hb").d("HbNavHost")
     NavHost(navController = controller,
         startDestination = Screen.Home.route,
         modifier = modifier,
         builder = {
-
+            //创建嵌套导航
+            //navigation()
+//            navigation(startDestination = Screen.Home.route, route = "1") {}
             composable(route = Screen.Home.route) {
                 HomeScreen(onNavigate = {
                     controller.navigate(route = "${Screen.Detail.route}?url=$it")
@@ -54,7 +58,10 @@ fun HbNavHost(controller: NavHostController, modifier: Modifier) {
                 })
             ) {
                 DetailScreen {
-                    controller.navigateUp()
+//                    controller.navigateUp()
+                    controller.popBackStack()
+//                    val id = controller.previousBackStackEntry?.destination!!.id
+//                    controller.popBackStack(id, false, true)
                 }
             }
         })

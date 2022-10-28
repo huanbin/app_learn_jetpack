@@ -3,11 +3,14 @@ package com.hb.jetpack_compose.ui.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -20,48 +23,39 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
-import com.hb.jetpack_compose.BottomNavigationViewHeight
 import com.hb.jetpack_compose.R
 import com.hb.jetpack_compose.model.ArticleItemData
-import com.hb.jetpack_compose.ui.component.SwiperefreshLayout
+import com.hb.jetpack_compose.model.Banner
+import timber.log.Timber
 
 
-@OptIn(ExperimentalPagerApi::class, ExperimentalLifecycleComposeApi::class)
+@OptIn(
+    ExperimentalPagerApi::class, ExperimentalLifecycleComposeApi::class,
+    ExperimentalComposeUiApi::class
+)
 @Composable
 fun HomeScreen(viewModel: HomeViewModel = viewModel(), onNavigate: (urlArticle: String) -> Unit) {
     val lazyListState = rememberLazyListState()
     val pager = viewModel.pager.collectAsLazyPagingItems()
-    val asPaddingValues = WindowInsets.systemBars.asPaddingValues()
-    val bannerState = viewModel.bannerStateFlow.collectAsStateWithLifecycle()
     val pagerState = rememberPagerState()
-
-    SwiperefreshLayout(contentPadding = PaddingValues(
-        //top = asPaddingValues.calculateTopPadding(),
-        bottom = asPaddingValues.calculateBottomPadding() + BottomNavigationViewHeight.dp
-    ), lazyListState = lazyListState, lazyPagingItems = pager, itemLayout = { index, value ->
-        ArticleItemLayout(value = value) {
-            onNavigate.invoke(value!!.link)
+    val bannerDatas by viewModel.bannerStateFlow.collectAsStateWithLifecycle()
+    LazyColumn(
+        state = lazyListState,
+        modifier = Modifier
+            .statusBarsPadding()
+    ) {
+        item(bannerDatas.hashCode()) {
+            Banner(pagerState = pagerState, bannerDatas = bannerDatas, onNavigate = {
+                onNavigate(it)
+            })
         }
-    }) {
-        HorizontalPager(count = bannerState.value.size,
-//            contentPadding = PaddingValues(
-//                top = asPaddingValues.calculateTopPadding()
-//            ),
-            state = pagerState, modifier = Modifier
-                .clickable {
-                    onNavigate?.invoke(bannerState.value[pagerState.currentPage].url)
-                }
-                .fillMaxWidth()
-                .fillMaxHeight(0.25f)) { page ->
-            AsyncImage(
-                model = bannerState.value[page].imagePath,
-                contentDescription = "",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
+        items(count = pager.itemCount) { index ->
+            ArticleItemLayout(value = pager[index], onClickItem = {
+                onNavigate.invoke(it!!.link)
+            })
         }
-        Divider(color = Color.LightGray, thickness = 4.dp)
     }
 }
 
@@ -107,5 +101,32 @@ fun ArticleItemLayout(value: ArticleItemData?, onClickItem: (value: ArticleItemD
                 })
         }
         Divider(color = Color.LightGray, thickness = 0.5.dp)
+    }
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun Banner(
+    pagerState: PagerState = rememberPagerState(),
+    bannerDatas: List<Banner>,
+    onNavigate: (String) -> Unit
+) {
+    Timber.tag("hb").d("Banner")
+    HorizontalPager(count = bannerDatas.size,
+        contentPadding = PaddingValues(top = 25.dp),
+        state = pagerState,
+        modifier = Modifier
+            .clickable {
+                onNavigate(bannerDatas[pagerState.currentPage].url)
+            }
+            .fillMaxWidth()
+            .fillMaxHeight(0.25f)
+    ) { page ->
+        AsyncImage(
+            model = bannerDatas[page].imagePath,
+            contentDescription = "",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
+        )
     }
 }

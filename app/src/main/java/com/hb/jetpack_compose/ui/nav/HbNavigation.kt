@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -18,7 +19,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 val items = listOf(Screen.Home, Screen.Topic, Screen.Setting)
 
 @Composable
-fun HbNavigation(navHostController: NavHostController) {
+fun HbNavigation(navHostController: NavHostController, modifier: Modifier) {
     val navBackStackEntry by navHostController.currentBackStackEntryAsState()
 
     val currentDestination = navBackStackEntry?.destination
@@ -29,7 +30,7 @@ fun HbNavigation(navHostController: NavHostController) {
 
     if (showBottomNavigation) {
 
-        BottomNavigation {
+        BottomNavigation(modifier = modifier) {
 
             items.forEach { item ->
                 BottomNavigationItem(icon = {

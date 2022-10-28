@@ -40,7 +40,7 @@ fun DetailScreen(
                 .background(colorResource(id = R.color.primaryDarkColor))
                 .systemBarsPadding()
         ) {
-            IconButton(onClick = { onNavigate?.invoke(0) }) {
+            IconButton(onClick = { onNavigate.invoke(0) }) {
                 Icon(
                     imageVector = Icons.Outlined.ArrowBack,
                     contentDescription = "返回",

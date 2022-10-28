@@ -1,53 +1,42 @@
 package com.hb.jetpack_compose.ui.home
 
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import com.hb.jetpack_compose.model.Banner
 import com.hb.jetpack_compose.network.RetrofitApi
 import com.hb.jetpack_compose.repository.pagerFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class HomeViewModel : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
+    private val _bannerStateFlow = MutableStateFlow<List<Banner>>(listOf())
+
+    val bannerStateFlow = _bannerStateFlow.stateIn(
+        viewModelScope, SharingStarted.WhileSubscribed(5000),
+        listOf()
+    )
+
+    init {
+        viewModelScope.launch {
+            flow {
+                Timber.tag("hb").d("bannerStateFlow1")
+                val homeBanner = RetrofitApi.getInstance().getHomeBanner().data
+                emit(homeBanner)
+            }.catch {
+                Timber.tag("hb").e(it)
+            }.collectLatest {
+                Timber.tag("hb").d("bannerStateFlow2")
+                _bannerStateFlow.value = it
+            }
+        }
     }
-    val text: LiveData<String> = _text
-
-    val lazyListState = LazyListState()
-
-    /*   val pager = Pager(
-           PagingConfig(
-               pageSize = ArticleDataSource.PageSize,
-   //            prefetchDistance=10,
-   //            maxSize用于避免浪费更多内存资源，enablePlaceholders是配合maxSize一起，在用户滑动列表超过maxSize之后，用户反向滑动时暂时显示null item
-               enablePlaceholders = true, maxSize = 200, initialLoadSize = 10
-           )
-       ) {
-           object : ArticleDataSource() {
-               override suspend fun Api.getData(page: Int, pageSize: Int): List<ArticleItemData> {
-                   return getHomeArticleList(page, pageSize).data.articleItemData
-               }
-           }
-       }.flow
-           //.flowOn(Dispatchers.IO)
-           .cachedIn(viewModelScope)*/
 
     val pager = pagerFlow { page, pageSize ->
+        Timber.tag("hb").d("pagerFlow")
         getHomeArticleList(page, pageSize).data.articleItemData
-    }.cachedIn(viewModelScope)
+    }.flow.cachedIn(viewModelScope)
 
-    val bannerStateFlow = flow {
-        val homeBanner = RetrofitApi.getInstance().getHomeBanner().data
-        emit(homeBanner)
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
-        initialValue = listOf()
-    )
 }
