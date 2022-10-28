@@ -7,8 +7,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
@@ -25,7 +23,6 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.hb.jetpack_compose.R
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -106,14 +103,14 @@ fun <T : Any> SwiperefreshLayout(
             }
         }
 
-        val rememberCoroutineScope = rememberCoroutineScope()
-        LaunchedEffect(Unit) {
-            rememberCoroutineScope.launch {
-                lazyListState.animateScrollToItem(
-                    lazyListState.firstVisibleItemIndex, lazyListState.firstVisibleItemScrollOffset
-                )
-            }
-        }
+//        val rememberCoroutineScope = rememberCoroutineScope()
+//        LaunchedEffect(Unit) {
+//            rememberCoroutineScope.launch {
+//                lazyListState.animateScrollToItem(
+//                    lazyListState.firstVisibleItemIndex, lazyListState.firstVisibleItemScrollOffset
+//                )
+//            }
+//        }
     }
 }
 
