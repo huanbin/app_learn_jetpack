@@ -6,7 +6,9 @@ import androidx.paging.cachedIn
 import com.hb.jetpack_compose.model.Banner
 import com.hb.jetpack_compose.network.RetrofitApi
 import com.hb.jetpack_compose.repository.pagerFlow
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -19,17 +21,15 @@ class HomeViewModel : ViewModel() {
         listOf()
     )
 
+
     init {
         viewModelScope.launch {
-            flow {
+            try {
                 Timber.tag("hb").d("bannerStateFlow1")
                 val homeBanner = RetrofitApi.getInstance().getHomeBanner().data
-                emit(homeBanner)
-            }.catch {
-                Timber.tag("hb").e(it)
-            }.collectLatest {
-                Timber.tag("hb").d("bannerStateFlow2")
-                _bannerStateFlow.value = it
+                _bannerStateFlow.value = homeBanner
+            } catch (e: Exception) {
+                Timber.tag("hb").e(e)
             }
         }
     }
