@@ -20,6 +20,7 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemsIndexed
 import coil.compose.AsyncImage
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -46,15 +47,17 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel(), onNavigate: (urlArticle: 
         modifier = Modifier
             .statusBarsPadding()
     ) {
-        item(bannerDatas.hashCode()) {
+        item {
             Banner(pagerState = pagerState, bannerDatas = bannerDatas, onNavigate = {
                 onNavigate(it)
             })
+            Divider(color = Color.LightGray, thickness = 0.5.dp)
         }
-        items(count = pager.itemCount) { index ->
+        itemsIndexed(pager) { index, value ->
             ArticleItemLayout(value = pager[index], onClickItem = {
                 onNavigate.invoke(it!!.link)
             })
+            Divider(color = Color.LightGray, thickness = 0.5.dp)
         }
     }
 }
@@ -62,30 +65,30 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel(), onNavigate: (urlArticle: 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ArticleItemLayout(value: ArticleItemData?, onClickItem: (value: ArticleItemData?) -> Unit) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        if (null == value) {
-            ListItem {
-                Text(
-                    text = "Loading...", modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentWidth()
-                )
-            }
-        } else {
-            ListItem(modifier = Modifier
-                .clickable { onClickItem.invoke(value) }
-                .padding(vertical = 16.dp), icon = {
-                IconToggleButton(checked = false, onCheckedChange = {
+//    Column(modifier = Modifier.fillMaxWidth()) {
+    if (null == value) {
+        ListItem {
+            Text(
+                text = "Loading...", modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentWidth()
+            )
+        }
+    } else {
+        ListItem(modifier = Modifier
+            .clickable { onClickItem.invoke(value) }
+            .padding(vertical = 16.dp), icon = {
+            IconToggleButton(checked = false, onCheckedChange = {
 
-                }, content = {
-                    Icon(
-                        Icons.Outlined.FavoriteBorder,
-                        tint = colorResource(id = R.color.primaryColor),
-                        contentDescription = "收藏",
-                        modifier = Modifier
-                    )
-                })
-            }, secondaryText = null, singleLineSecondaryText = false, overlineText = null,
+            }, content = {
+                Icon(
+                    Icons.Outlined.FavoriteBorder,
+                    tint = colorResource(id = R.color.primaryColor),
+                    contentDescription = "收藏",
+                    modifier = Modifier
+                )
+            })
+        }, secondaryText = null, singleLineSecondaryText = false, overlineText = null,
 //                trailing = {
 //                    IconButton(onClick = { /*TODO*/ }) {
 //                        Icon(
@@ -96,12 +99,12 @@ fun ArticleItemLayout(value: ArticleItemData?, onClickItem: (value: ArticleItemD
 //                        )
 //                    }
 //                },
-                text = {
-                    Text(text = "${value?.title}", maxLines = 3)
-                })
-        }
-        Divider(color = Color.LightGray, thickness = 0.5.dp)
+            text = {
+                Text(text = "${value?.title}", maxLines = 3)
+            })
     }
+//    Divider(color = Color.LightGray, thickness = 0.5.dp)
+//    }
 }
 
 @OptIn(ExperimentalPagerApi::class)
