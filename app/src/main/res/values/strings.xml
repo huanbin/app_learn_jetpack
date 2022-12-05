@@ -9,4 +9,5 @@
     <string name="menu_topics">主题</string>
     <string name="menu_settings">设置</string>
     <string name="menu_home">首页</string>
+    <string name="empty_content">内容是空的</string>
 </resources>

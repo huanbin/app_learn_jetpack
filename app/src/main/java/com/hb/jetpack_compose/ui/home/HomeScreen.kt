@@ -42,6 +42,7 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel(), onNavigate: (urlArticle: 
     val pager = viewModel.pager.collectAsLazyPagingItems()
     val pagerState = rememberPagerState()
     val bannerDatas by viewModel.bannerStateFlow.collectAsStateWithLifecycle()
+
     LazyColumn(
         state = lazyListState,
         modifier = Modifier

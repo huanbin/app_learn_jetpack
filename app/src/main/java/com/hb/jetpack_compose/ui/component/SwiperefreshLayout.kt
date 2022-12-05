@@ -4,9 +4,14 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
@@ -14,12 +19,16 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemsIndexed
 import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.hb.jetpack_compose.R
@@ -150,6 +159,85 @@ fun GlowIndicator(
                 progress = progress,
                 modifier = Modifier.fillMaxWidth(),
             )
+        }
+    }
+}
+
+@Composable
+fun <T : Any> SwipeRefreshContent(
+    viewModel: ViewModel,
+    lazyPagingListData: LazyPagingItems<T>,
+    state: LazyListState = rememberLazyListState(),
+    itemContent: LazyListScope.() -> Unit = {},
+    content: @Composable (index: Int, data: T) -> Unit,
+    contentPaddingValues: PaddingValues = PaddingValues(0.dp),
+    swipeEnabled: Boolean = true
+) {
+    Column(modifier = Modifier.fillMaxSize()) {
+        //状态需要提升，实现刷新效果
+        val refreshState = rememberSwipeRefreshState(false)
+        val endList = remember {
+            mutableStateOf(false)
+        }
+        SwipeRefresh(
+            state = refreshState,
+            swipeEnabled = swipeEnabled,
+            onRefresh = {
+                //显示刷新头
+                refreshState.isRefreshing = true
+                //刷新数据
+                lazyPagingListData.refresh()
+                viewModel.sleepTime(millis = 1000) {
+                    refreshState.isRefreshing = false
+                }
+            },
+            indicator = { state, trigger ->
+                SwipeRefreshIndicator(
+                    // Pass the SwipeRefreshState + trigger through
+                    state = state,
+                    refreshTriggerDistance = trigger,
+                    // Enable the scale animation
+                    scale = true,
+                    // Change the color and shape
+                    backgroundColor = Color.White,
+                    contentColor = Color.Red,
+                    shape = RoundedCornerShape(100),
+                    largeIndication = false,
+                )
+            }
+        ) {
+            //列表数据
+            PagingStateUtil().pagingStateUtil(lazyPagingListData, refreshState, viewModel) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    state = state,
+                    contentPadding = contentPaddingValues
+                ) {
+                    itemContent()
+                    itemsIndexed(lazyPagingListData) { index, data ->
+                        content(index, data!!)
+                    }
+                    //加载更多，没有更多数据状态页
+                    if (lazyPagingListData.loadState.append is LoadState.NotLoading && lazyPagingListData.loadState.append.endOfPaginationReached) {
+                        item {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .wrapContentSize()
+                            ) {
+                                Text(
+                                    text = "没有更多数据",
+                                    fontSize = 16.sp,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 10.dp)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
